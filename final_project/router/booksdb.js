@@ -41,4 +41,22 @@ function getBookForTitle(title) {
       }
 };
 
-module.exports = { books, getAllBookIsbns, getBooksForAuthor, getBookForTitle };
+function getBookForISBN(isbn) {
+      const book = books[isbn];
+      if (book) {
+            return book;
+      } else {
+            return null;
+      }
+};
+
+
+function getReviewForBook(book) {
+      if (book) {
+            return book['reviews'];
+      } else {
+            return null;
+      }
+};
+
+module.exports = { books, getAllBookIsbns, getBooksForAuthor, getBookForTitle, getBookForISBN, getReviewForBook };
