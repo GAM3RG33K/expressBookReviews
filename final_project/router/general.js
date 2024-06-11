@@ -1,5 +1,5 @@
 const express = require('express');
-const { getAllBookIsbns, books } = require("./booksdb");
+const { books, getAllBookIsbns, getBooksForAuthor } = require("./booksdb");
 let isValid = require("./auth_users.js").isValid;
 let users = require("./auth_users.js").users;
 const public_users = express.Router();
@@ -25,14 +25,20 @@ public_users.get('/isbn/:isbn', function (req, res) {
     const book = books[isbn];
     return res.status(200).send(JSON.stringify(book, null, 4));
   } else {
-    return res.status(404).send(`Unable to find book for isbn: $isbn`);
+    return res.status(404).send(`Unable to find book for isbn: ${isbn}`);
   }
 });
 
 // Get book details based on author
 public_users.get('/author/:author', function (req, res) {
-  //Write your code here
-  return res.status(300).json({ message: "Yet to be implemented" });
+  const author = req.params.author;
+
+  const authorBooks = getBooksForAuthor(author);
+  if (authorBooks) {
+    return res.status(200).send(JSON.stringify(authorBooks, null, 4));
+  } else {
+    return res.status(404).send(`Unable to find book(s) for author: ${author}`);
+  }
 });
 
 // Get all books based on title

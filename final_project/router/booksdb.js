@@ -15,4 +15,20 @@ function getAllBookIsbns() {
       return Object.keys(books);
 };
 
-module.exports = { getAllBookIsbns, books };
+
+function getAllBooks() {
+      return Object.values(books);
+};
+
+
+function getBooksForAuthor(author) {
+
+      const book = getAllBooks().filter((book) => book.author === author);
+      if (book) {
+            return book;
+      } else {
+            return null;
+      }
+};
+
+module.exports = { books, getAllBookIsbns, getBooksForAuthor };
