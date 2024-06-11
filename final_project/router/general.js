@@ -1,6 +1,6 @@
 const express = require('express');
-const { books, getAllBookIsbns, getBooksForAuthor, getBookForTitle, getBookForISBN, getReviewForBook } = require("./booksdb");
-const { users, isValid, registerUser } = require("./auth_users.js");
+const { getBooks, getBooksForAuthor, getBookForTitle, getBookForISBN, getReviewForBook } = require("./booksdb");
+const { isValid, registerUser } = require("./auth_users.js");
 const { isEmpty } = require("./utils/common_utils.js");
 const public_users = express.Router();
 
@@ -24,7 +24,8 @@ public_users.post("/register", (req, res) => {
 });
 
 // Get the book list available in the shop
-public_users.get('/', function (req, res) {
+public_users.get('/', async function (req, res) {
+  const books = await getBooks();
   return res.status(200).send(JSON.stringify(books, null, 4));
 });
 

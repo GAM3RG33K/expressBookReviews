@@ -11,10 +11,14 @@ let books = {
       10: { "author": "Samuel Beckett", "title": "Molloy, Malone Dies, The Unnamable, the trilogy", "reviews": {} }
 }
 
-function getAllBookIsbns() {
-      return Object.keys(books);
-};
-
+function getBooks() {
+      let booksPromise = new Promise((resolve, reject) => {
+            setTimeout(() => {
+                  resolve(books)
+            }, 5000)
+      })
+      return booksPromise;
+}
 
 function getAllBooks() {
       return Object.values(books);
@@ -71,4 +75,4 @@ function deleteReviewFromBook(isbn, username, review) {
       delete book.reviews[username];
 };
 
-module.exports = { books, getAllBookIsbns, getBooksForAuthor, getBookForTitle, getBookForISBN, getReviewForBook, addReviewForBook, deleteReviewFromBook };
+module.exports = { getBooks, getBooksForAuthor, getBookForTitle, getBookForISBN, getReviewForBook, addReviewForBook, deleteReviewFromBook };

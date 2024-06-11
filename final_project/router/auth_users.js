@@ -1,6 +1,6 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
-const { books, getBookForISBN, addReviewForBook, deleteReviewFromBook } = require("./booksdb.js");
+const { getBookForISBN, addReviewForBook, deleteReviewFromBook } = require("./booksdb.js");
 const regd_users = express.Router();
 const { JWT_SECRET } = require('../config/config.js');
 const { isEmpty } = require('./utils/common_utils.js');
