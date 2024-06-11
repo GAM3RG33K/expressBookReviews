@@ -31,4 +31,14 @@ function getBooksForAuthor(author) {
       }
 };
 
-module.exports = { books, getAllBookIsbns, getBooksForAuthor };
+function getBookForTitle(title) {
+
+      const books = getAllBooks().filter((book) => book.title === title);
+      if (books && books.length > 0) {
+            return books[0];
+      } else {
+            return null;
+      }
+};
+
+module.exports = { books, getAllBookIsbns, getBooksForAuthor, getBookForTitle };

@@ -1,5 +1,5 @@
 const express = require('express');
-const { books, getAllBookIsbns, getBooksForAuthor } = require("./booksdb");
+const { books, getAllBookIsbns, getBooksForAuthor, getBookForTitle } = require("./booksdb");
 let isValid = require("./auth_users.js").isValid;
 let users = require("./auth_users.js").users;
 const public_users = express.Router();
@@ -43,8 +43,14 @@ public_users.get('/author/:author', function (req, res) {
 
 // Get all books based on title
 public_users.get('/title/:title', function (req, res) {
-  //Write your code here
-  return res.status(300).json({ message: "Yet to be implemented" });
+  const title = req.params.title;
+
+  const book = getBookForTitle(title);
+  if (book) {
+    return res.status(200).send(JSON.stringify(book, null, 4));
+  } else {
+    return res.status(404).send(`Unable to find book(s) for title: ${title}`);
+  }
 });
 
 //  Get book review
