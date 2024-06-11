@@ -1,13 +1,28 @@
 const express = require('express');
 const { books, getAllBookIsbns, getBooksForAuthor, getBookForTitle, getBookForISBN, getReviewForBook } = require("./booksdb");
 let isValid = require("./auth_users.js").isValid;
-let users = require("./auth_users.js").users;
+const { users, doesUserExist, registerUser } = require("./auth_users.js");
+const { isEmpty } = require("./utils/common_utils.js");
 const public_users = express.Router();
 
 
 public_users.post("/register", (req, res) => {
-  //Write your code here
-  return res.status(300).json({ message: "Yet to be implemented" });
+  const { username, password } = req.body;
+
+  if (!username || !password) {
+    return res.status(400).json({ message: "Username and Password are required." });
+  }
+
+  const existingUser = doesUserExist(username);
+  if (!isEmpty(existingUser)) {
+    return res.status(409).json({ message: "Username already exists." });
+  }
+
+
+  const newUser = { username, password };
+  registerUser(newUser);
+
+  return res.status(201).json({ message: "New user registered successfully.", ...newUser });
 });
 
 // Get the book list available in the shop
@@ -59,7 +74,7 @@ public_users.get('/review/:isbn', function (req, res) {
   const book = getBookForISBN(isbn);
   if (book) {
     const reviews = getReviewForBook(book);
-    if (reviews && reviews.length > 0) {
+    if (!isEmpty(reviews)) {
       return res.status(200).send(JSON.stringify(reviews, null, 4));
     } else {
       return res.status(404).send(`No reviews yet, for book with isbn: ${isbn}`);
