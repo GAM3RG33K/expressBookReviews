@@ -59,4 +59,10 @@ function getReviewForBook(book) {
       }
 };
 
-module.exports = { books, getAllBookIsbns, getBooksForAuthor, getBookForTitle, getBookForISBN, getReviewForBook };
+
+function addReviewForBook(isbn, username, review) {
+      const book = getBookForISBN(isbn);
+      book.reviews[username] = review;
+};
+
+module.exports = { books, getAllBookIsbns, getBooksForAuthor, getBookForTitle, getBookForISBN, getReviewForBook, addReviewForBook };

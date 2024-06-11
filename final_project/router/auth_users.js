@@ -1,6 +1,6 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
-let books = require("./booksdb.js");
+const { books, getBookForISBN, addReviewForBook } = require("./booksdb.js");
 const regd_users = express.Router();
 const { JWT_SECRET } = require('../config/config.js');
 const { isEmpty } = require('./utils/common_utils.js');
@@ -40,14 +40,25 @@ regd_users.post("/login", (req, res) => {
 
   const token = jwt.sign({ username }, JWT_SECRET, { expiresIn: 60 * 60 });
 
-  req.session.user = user;
+  req.session.user = username;
   return res.status(200).json({ token, ...user });
 });
 
 // Add a book review
 regd_users.put("/auth/review/:isbn", (req, res) => {
-  //Write your code here
-  return res.status(300).json({ message: "Yet to be implemented" });
+  const user = req.session.user;
+  if (!user) return res.status(403).send(`Access denied, Please login & try again`);
+
+  const isbn = req.params.isbn;
+  const review = req.body.review;
+
+  const book = getBookForISBN(isbn);
+  if (book) {
+    addReviewForBook(isbn, user, review);
+    return res.status(201).send(`Review added for book isbn: ${isbn} for user: ${user}`);
+  } else {
+    return res.status(404).send(`Unable to find book for isbn: ${isbn}`);
+  }
 });
 
 function registerUser(user) {
