@@ -36,7 +36,6 @@ function getBooksForAuthor(author) {
 };
 
 function getBookForTitle(title) {
-
       const books = getAllBooks().filter((book) => book.title === title);
       if (books && books.length > 0) {
             return books[0];
@@ -45,8 +44,13 @@ function getBookForTitle(title) {
       }
 };
 
-function getBookForISBN(isbn) {
-      const book = books[isbn];
+async function getBookForISBN(isbn) {
+      let booksPromise = new Promise((resolve, reject) => {
+            setTimeout(() => {
+                  resolve(books[isbn])
+            }, 5000)
+      })
+      const book = await booksPromise;
       if (book) {
             return book;
       } else {
@@ -64,14 +68,14 @@ function getReviewForBook(book) {
 };
 
 
-function addReviewForBook(isbn, username, review) {
-      const book = getBookForISBN(isbn);
+async function addReviewForBook(isbn, username, review) {
+      const book = await getBookForISBN(isbn);
       book.reviews[username] = review;
 };
 
 
-function deleteReviewFromBook(isbn, username, review) {
-      const book = getBookForISBN(isbn);
+async function deleteReviewFromBook(isbn, username, review) {
+      const book = await getBookForISBN(isbn);
       delete book.reviews[username];
 };
 

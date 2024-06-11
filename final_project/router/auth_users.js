@@ -45,14 +45,14 @@ regd_users.post("/login", (req, res) => {
 });
 
 // Add a book review
-regd_users.put("/auth/review/:isbn", (req, res) => {
+regd_users.put("/auth/review/:isbn", async (req, res) => {
   const user = req.session.user;
   if (!user) return res.status(403).send(`Access denied, Please login & try again`);
 
   const isbn = req.params.isbn;
   const review = req.body.review;
 
-  const book = getBookForISBN(isbn);
+  const book = await getBookForISBN(isbn);
   if (book) {
     addReviewForBook(isbn, user, review);
     return res.status(201).send(`Review added for book isbn: ${isbn} for user: ${user}`);
@@ -62,13 +62,13 @@ regd_users.put("/auth/review/:isbn", (req, res) => {
 });
 
 // Delete a book review
-regd_users.delete("/auth/review/:isbn", (req, res) => {
+regd_users.delete("/auth/review/:isbn", async (req, res) => {
   const user = req.session.user;
   if (!user) return res.status(403).send(`Access denied, Please login & try again`);
 
   const isbn = req.params.isbn;
 
-  const book = getBookForISBN(isbn);
+  const book = await getBookForISBN(isbn);
   if (book) {
     deleteReviewFromBook(isbn, user);
     return res.status(201).send(`Review deleted for book isbn: ${isbn} by user: ${user}`);
