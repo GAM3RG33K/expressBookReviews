@@ -43,10 +43,10 @@ public_users.get('/isbn/:isbn', async function (req, res) {
 });
 
 // Get book details based on author
-public_users.get('/author/:author', function (req, res) {
+public_users.get('/author/:author', async function (req, res) {
   const author = req.params.author;
 
-  const authorBooks = getBooksForAuthor(author);
+  const authorBooks = await getBooksForAuthor(author);
   if (authorBooks) {
     return res.status(200).send(JSON.stringify(authorBooks, null, 4));
   } else {
@@ -55,10 +55,10 @@ public_users.get('/author/:author', function (req, res) {
 });
 
 // Get all books based on title
-public_users.get('/title/:title', function (req, res) {
+public_users.get('/title/:title', async function (req, res) {
   const title = req.params.title;
 
-  const book = getBookForTitle(title);
+  const book = await getBookForTitle(title);
   if (book) {
     return res.status(200).send(JSON.stringify(book, null, 4));
   } else {

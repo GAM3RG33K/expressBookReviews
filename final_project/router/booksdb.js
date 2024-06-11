@@ -21,13 +21,18 @@ function getBooks() {
 }
 
 function getAllBooks() {
-      return Object.values(books);
+      let booksPromise = new Promise((resolve, reject) => {
+            setTimeout(() => {
+                  resolve(Object.values(books))
+            }, 5000)
+      })
+      return booksPromise;
 };
 
 
-function getBooksForAuthor(author) {
-
-      const book = getAllBooks().filter((book) => book.author === author);
+async function getBooksForAuthor(author) {
+      const books = await getAllBooks();
+      const book = books.filter((book) => book.author === author);
       if (book) {
             return book;
       } else {
@@ -35,8 +40,9 @@ function getBooksForAuthor(author) {
       }
 };
 
-function getBookForTitle(title) {
-      const books = getAllBooks().filter((book) => book.title === title);
+async function getBookForTitle(title) {
+      const books = await getAllBooks();
+      const book = books.filter((book) => book.title === title);
       if (books && books.length > 0) {
             return books[0];
       } else {
