@@ -1,6 +1,6 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
-const { books, getBookForISBN, addReviewForBook } = require("./booksdb.js");
+const { books, getBookForISBN, addReviewForBook, deleteReviewFromBook } = require("./booksdb.js");
 const regd_users = express.Router();
 const { JWT_SECRET } = require('../config/config.js');
 const { isEmpty } = require('./utils/common_utils.js');
@@ -56,6 +56,22 @@ regd_users.put("/auth/review/:isbn", (req, res) => {
   if (book) {
     addReviewForBook(isbn, user, review);
     return res.status(201).send(`Review added for book isbn: ${isbn} for user: ${user}`);
+  } else {
+    return res.status(404).send(`Unable to find book for isbn: ${isbn}`);
+  }
+});
+
+// Delete a book review
+regd_users.delete("/auth/review/:isbn", (req, res) => {
+  const user = req.session.user;
+  if (!user) return res.status(403).send(`Access denied, Please login & try again`);
+
+  const isbn = req.params.isbn;
+
+  const book = getBookForISBN(isbn);
+  if (book) {
+    deleteReviewFromBook(isbn, user);
+    return res.status(201).send(`Review deleted for book isbn: ${isbn} by user: ${user}`);
   } else {
     return res.status(404).send(`Unable to find book for isbn: ${isbn}`);
   }

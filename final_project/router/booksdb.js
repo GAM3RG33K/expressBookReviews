@@ -65,4 +65,10 @@ function addReviewForBook(isbn, username, review) {
       book.reviews[username] = review;
 };
 
-module.exports = { books, getAllBookIsbns, getBooksForAuthor, getBookForTitle, getBookForISBN, getReviewForBook, addReviewForBook };
+
+function deleteReviewFromBook(isbn, username, review) {
+      const book = getBookForISBN(isbn);
+      delete book.reviews[username];
+};
+
+module.exports = { books, getAllBookIsbns, getBooksForAuthor, getBookForTitle, getBookForISBN, getReviewForBook, addReviewForBook, deleteReviewFromBook };
