@@ -1,7 +1,6 @@
 const express = require('express');
 const { books, getAllBookIsbns, getBooksForAuthor, getBookForTitle, getBookForISBN, getReviewForBook } = require("./booksdb");
-let isValid = require("./auth_users.js").isValid;
-const { users, doesUserExist, registerUser } = require("./auth_users.js");
+const { users, isValid, registerUser } = require("./auth_users.js");
 const { isEmpty } = require("./utils/common_utils.js");
 const public_users = express.Router();
 
@@ -10,19 +9,18 @@ public_users.post("/register", (req, res) => {
   const { username, password } = req.body;
 
   if (!username || !password) {
-    return res.status(400).json({ message: "Username and Password are required." });
+    return res.status(400).send("Username and Password are required.");
   }
 
-  const existingUser = doesUserExist(username);
-  if (!isEmpty(existingUser)) {
-    return res.status(409).json({ message: "Username already exists." });
+  const isValidUser = isValid(username);
+  if (isValidUser) {
+    return res.status(409).send("Username already exists.");
   }
-
 
   const newUser = { username, password };
   registerUser(newUser);
 
-  return res.status(201).json({ message: "New user registered successfully.", ...newUser });
+  return res.status(201).send(`New user ${username} registered successfully`);
 });
 
 // Get the book list available in the shop

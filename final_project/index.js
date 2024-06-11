@@ -1,14 +1,16 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
 const session = require('express-session')
-const customer_routes = require('./router/auth_users.js').authenticated;
+const { JWT_SECRET } = require('./config/config.js')
+const {customer_routes} = require('./router/auth_users.js');
 const genl_routes = require('./router/general.js').general;
 
 const app = express();
 
 app.use(express.json());
 
-app.use("/customer", session({ secret: "fingerprint_customer", resave: true, saveUninitialized: true }))
+
+app.use("/customer", session({ secret: JWT_SECRET, resave: true, saveUninitialized: true }))
 
 app.use("/customer/auth/*", function auth(req, res, next) {
     const token = req.headers['Authorization'];
@@ -16,7 +18,7 @@ app.use("/customer/auth/*", function auth(req, res, next) {
         return res.status(403).send('You are not authorized to access this resource.');
     }
 
-    const payload = jwt.verify(token, "fingerprint_customer");
+    const payload = jwt.verify(token, JWT_SECRET);
     const user = payload.user;
     if (!user) {
         return res.status(403).send('Invalid user, You are not authorized to access this resource.');
